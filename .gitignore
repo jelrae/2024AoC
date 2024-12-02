@@ -3,7 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# Annoying files
+# Annoying files (Jordan Added)
 .name
 *.iml
 *.xml
