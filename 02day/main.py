@@ -14,19 +14,30 @@ def load_file(fp='input.txt'):
     return d
 
 
-def determine_safety(exp_check = 0):
+def determine_safety(fp = 'input.txt', exp_check = False, problem_dampener = True):
 
-    reports = load_file('test_input.txt')
+    reports = load_file(fp)
     rs = []
     for r in reports:
         c = [r[i] - r[i+1] for i in range(0, len(r)-1)]
+
+        scp = [1 <= i <= 3 for i in c]
+        scn = [-3 <= i <= -1 for i in c]
+
+        if problem_dampener:
+            sc = np.sum(scp) <= 1 or np.sum(scn) <= 1
+        else:
+            sc = all(scp) or all(scn)
+
         if exp_check:
             print('For the array :' + str(r))
             print('This is the check array: ' + str(c))
-            print('Check for pos. good: ' + str(all(1 <= i <= 3 for i in c)))
-            print('Check for neg. good: ' + str(all(-3 <= i <= -1 for i in c)))
-
-        sc = all(1 <= i <= 3 for i in c) or all(-3 <= i <= -1 for i in c)
+            if problem_dampener:
+                print('Check for pos. good: ' + str(np.sum(scp)))
+                print('Check for neg. good: ' + str(np.sum(scn)))
+            else:
+                print('Check for pos. good: ' + str(all(scp)))
+                print('Check for neg. good: ' + str(all(scn)))
 
         print('For: ' + str(r) + ' it was determine that it was: ' + str(sc))
 
@@ -36,7 +47,8 @@ def determine_safety(exp_check = 0):
 
 
 def main():
-    determine_safety()
+    # determine_safety('test_input.txt', False, False)
+    determine_safety('input.txt',False, False)
 
 
 if __name__ == "__main__":
