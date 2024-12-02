@@ -59,7 +59,7 @@ def determine_similarity_counter():
     for k in set(c0.keys()) & set(c1.keys()):
         sim_score.append(k * c1[k])
 
-    print(sim_score)
+    # print(sim_score)
 
     print("The sim score using counter is: " + str(np.sum(sim_score)))
 
