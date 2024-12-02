@@ -25,7 +25,7 @@ def determine_safety(fp = 'input.txt', exp_check = False, problem_dampener = Tru
         scn = [-3 <= i <= -1 for i in c]
 
         if problem_dampener:
-            sc = np.sum(scp) <= 1 or np.sum(scn) <= 1
+            sc = np.sum(scp) >= len(scp) - 1 or np.sum(scn) >= len(scn) - 1
         else:
             sc = all(scp) or all(scn)
 
@@ -33,13 +33,13 @@ def determine_safety(fp = 'input.txt', exp_check = False, problem_dampener = Tru
             print('For the array :' + str(r))
             print('This is the check array: ' + str(c))
             if problem_dampener:
-                print('Check for pos. good: ' + str(np.sum(scp)))
-                print('Check for neg. good: ' + str(np.sum(scn)))
+                print('Check for pos. good: ' + str(np.sum(scp) >= len(scp) - 1))
+                print('Check for neg. good: ' + str(np.sum(scn) >= len(scn) - 1))
             else:
                 print('Check for pos. good: ' + str(all(scp)))
                 print('Check for neg. good: ' + str(all(scn)))
-
-        print('For: ' + str(r) + ' it was determine that it was: ' + str(sc))
+        else:
+            print('For: ' + str(r) + ' it was determine that it was: ' + str(sc))
 
         rs.append(sc)
     print(np.sum(rs))
@@ -47,8 +47,8 @@ def determine_safety(fp = 'input.txt', exp_check = False, problem_dampener = Tru
 
 
 def main():
-    # determine_safety('test_input.txt', False, False)
-    determine_safety('input.txt',False, False)
+    determine_safety('test_input.txt', True, True)
+    # determine_safety('input.txt',False, False)
 
 
 if __name__ == "__main__":
