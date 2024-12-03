@@ -13,22 +13,22 @@ def load_file(fp='input.txt'):
 
     with open(fp, 'r') as f:
         for line in f:
-            print(line)
+            # print(line)
             mults = clean_text(line)
+            # print(mults)
             md += mults
-    print(md)
+    # print(md)
     return md
 
 
 def determine_multiplications(fp = 'input.txt'):
     srd = load_file(fp)
     srd = np.array(srd)
-    breakpoint()
     output = np.sum(srd[:,0] * srd[:,1])
     print('The total of the mults in the system is : ' + str(output))
 
 def main():
-    fp = 'test_input.txt'
+    fp = 'input.txt'
     determine_multiplications(fp)
 
 if __name__ == "__main__":
