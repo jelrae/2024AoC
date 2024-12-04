@@ -25,24 +25,21 @@ def load_file_do_dont(fp='input.txt'):
     md = []
     mdos = []
     mdonts = []
-
+    complete_line = ''
 
     with open(fp, 'r') as f:
         for line in f:
-            # first find the do's and don'ts
-            for mdo in re.finditer("do\(\)", line):
-                # print(mdo.start())
-                mdos.append(mdo.start())
-            for mdont in re.finditer("don\'t\(\)", line):
-                # print(mdont.start())
-                mdonts.append(mdont.start())
-            md = re.finditer("mul\(\d+,\d+\)", line)
-            breakpoint()
-            mults = clean_text(line)
-            # print(mults)
-            md += mults
-    # print(md)
+            # Can also do a split along the donts, then using those, split along the do's, do the things, and manage the first one differently
+            # Should make all the lines one string so we can do this easier
+            complete_line += line
+
+
+    print(complete_line)
+    breakpoint()
+
     return md
+
+
 
 
 def determine_multiplications_base(fp = 'input.txt'):
@@ -61,3 +58,18 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+# Old way of doing it
+# # first find the do's and don'ts
+# for mdo in re.finditer("do\(\)", line):
+#     # print(mdo.start())
+#     mdos.append(mdo.start())
+# for mdont in re.finditer("don\'t\(\)", line):
+#     # print(mdont.start())
+#     mdonts.append(mdont.start())
+# md = re.finditer("mul\(\d+,\d+\)", line)
+# breakpoint()
+# mults = clean_text(line)
+# # print(mults)
+# md += mults
