@@ -11,7 +11,6 @@ def clean_text(line):
 def load_file_base(fp='input.txt'):
     md = []
 
-
     with open(fp, 'r') as f:
         for line in f:
             mults = clean_text(line)
@@ -33,9 +32,12 @@ def load_file_do_dont(fp='input.txt'):
             # Should make all the lines one string so we can do this easier
             complete_line += line
 
-
-    print(complete_line)
-    breakpoint()
+    split_line = complete_line.split('don\'t()')
+    md += clean_text(split_line[0])
+    for line in split_line[1:]:
+        dome = line.split('do()',1)
+        if len(dome) == 2:
+            md += clean_text(dome[1])
 
     return md
 
@@ -50,11 +52,15 @@ def determine_multiplications_base(fp = 'input.txt'):
 
 
 def determine_multiplactions_adv(fp = 'input.txt'):
-    load_file_do_dont(fp)
+    srd = load_file_do_dont(fp)
+    srd = np.array(srd)
+    output = np.sum(srd[:, 0] * srd[:, 1])
+    print('The total of the mults in the system is : ' + str(output))
 
 def main():
-    fp = 'test_input2.txt'
-    determine_multiplications_base(fp)
+    fp = 'input.txt'
+    # determine_multiplications_base(fp)
+    determine_multiplactions_adv(fp)
 
 if __name__ == "__main__":
     main()
