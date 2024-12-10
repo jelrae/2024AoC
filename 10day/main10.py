@@ -51,7 +51,7 @@ def check_path(tm, lc, score=0, vel=[], uep=True):
 
 def main():
     fp = 'input.txt'
-    unique_end_point = True
+    unique_end_point = False
     data_array = np.array(load_file(fp))
     print(data_array)
     start_locs = np.argwhere(data_array == 0)
@@ -63,7 +63,7 @@ def main():
         # t_vel = []
         scores[i], t_vel = check_path(data_array, sl, scores[i], v, unique_end_point)
         vels.append(t_vel)
-    print(scores)
+    # print(scores)
     print(np.sum(scores))
 
 
