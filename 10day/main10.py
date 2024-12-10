@@ -23,12 +23,12 @@ def load_file(fp='input.txt'):
     return data
 
 
-def check_path(tm, lc, score = 0):
+def check_path(tm, lc, score=0, vel=[]):
 
-    if tm[lc[0], lc[1]] == 9:
-        breakpoint()
+    if tm[lc[0], lc[1]] == 9 and tuple(lc) not in vel:
         score += 1
-        return score
+        vel.append(tuple(lc))
+        return score, vel
     else:
         new_x = [max(0, lc[0] - 1), min(tm.shape[0] - 1, lc[0] + 1)]
         new_y = [max(0, lc[1] - 1), min(tm.shape[1] - 1, lc[1] + 1)]
@@ -37,19 +37,20 @@ def check_path(tm, lc, score = 0):
         new_locs = np.concatenate((new_locs_x, new_locs_y))
         for nl in new_locs:
             if tm[nl[0], nl[1]] == (tm[lc[0], lc[1]] + 1):
-                score = check_path(tm, nl, score)
+                score, vel = check_path(tm, nl, score)
 
-        return score
+        return score, vel
 
 
 def main():
-    fp = 'ti0.txt'
+    fp = 'ti1.txt'
     data_array = np.array(load_file(fp))
     print(data_array)
     start_locs = np.argwhere(data_array == 0)
+    print(start_locs)
     scores = np.zeros(len(start_locs))
     for i, sl in enumerate(start_locs):
-        scores[i] = check_path(data_array, sl, scores[i])
+        scores[i], vel = check_path(data_array, sl, scores[i])
     print(scores)
 
 
