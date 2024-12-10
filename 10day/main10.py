@@ -47,7 +47,7 @@ def check_path(tm, lc, score=0, vel=[]):
 
 
 def main():
-    fp = 'ti2.txt'
+    fp = 'test_input.txt'
     data_array = np.array(load_file(fp))
     print(data_array)
     start_locs = np.argwhere(data_array == 0)
@@ -60,6 +60,7 @@ def main():
         scores[i], t_vel = check_path(data_array, sl, scores[i], v)
         vels.append(t_vel)
     print(scores)
+    print(np.sum(scores))
 
 
 
