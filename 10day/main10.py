@@ -47,7 +47,7 @@ def check_path(tm, lc, score=0, vel=[]):
 
 
 def main():
-    fp = 'test_input.txt'
+    fp = 'input.txt'
     data_array = np.array(load_file(fp))
     print(data_array)
     start_locs = np.argwhere(data_array == 0)
