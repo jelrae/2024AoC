@@ -23,13 +23,16 @@ def load_file(fp='input.txt'):
     return data
 
 
-def check_path(tm, lc, score=0, vel=[]):
-
+def check_path(tm, lc, score=0, vel=[], uep=True):
     if tm[lc[0], lc[1]] == 0:
         # print(vel)
-        vel=[]
+        vel = []
 
-    if tm[lc[0], lc[1]] == 9 and tuple(lc) not in vel:
+    if tm[lc[0], lc[1]] == 9 and tuple(lc) not in vel and uep:
+        score += 1
+        vel.append(tuple(lc))
+        return score, vel
+    elif tm[lc[0], lc[1]] == 9 and not uep:
         score += 1
         vel.append(tuple(lc))
         return score, vel
@@ -41,13 +44,14 @@ def check_path(tm, lc, score=0, vel=[]):
         new_locs = np.concatenate((new_locs_x, new_locs_y))
         for nl in new_locs:
             if tm[nl[0], nl[1]] == (tm[lc[0], lc[1]] + 1):
-                score, vel = check_path(tm, nl, score, vel)
+                score, vel = check_path(tm, nl, score, vel, uep)
 
         return score, vel
 
 
 def main():
     fp = 'input.txt'
+    unique_end_point = True
     data_array = np.array(load_file(fp))
     print(data_array)
     start_locs = np.argwhere(data_array == 0)
@@ -57,11 +61,10 @@ def main():
     for i, sl in enumerate(start_locs):
         # v = []
         # t_vel = []
-        scores[i], t_vel = check_path(data_array, sl, scores[i], v)
+        scores[i], t_vel = check_path(data_array, sl, scores[i], v, unique_end_point)
         vels.append(t_vel)
     print(scores)
     print(np.sum(scores))
-
 
 
 if __name__ == "__main__":
