@@ -25,6 +25,10 @@ def load_file(fp='input.txt'):
 
 def check_path(tm, lc, score=0, vel=[]):
 
+    if tm[lc[0], lc[1]] == 0:
+        # print(vel)
+        vel=[]
+
     if tm[lc[0], lc[1]] == 9 and tuple(lc) not in vel:
         score += 1
         vel.append(tuple(lc))
@@ -37,21 +41,26 @@ def check_path(tm, lc, score=0, vel=[]):
         new_locs = np.concatenate((new_locs_x, new_locs_y))
         for nl in new_locs:
             if tm[nl[0], nl[1]] == (tm[lc[0], lc[1]] + 1):
-                score, vel = check_path(tm, nl, score)
+                score, vel = check_path(tm, nl, score, vel)
 
         return score, vel
 
 
 def main():
-    fp = 'ti1.txt'
+    fp = 'ti2.txt'
     data_array = np.array(load_file(fp))
     print(data_array)
     start_locs = np.argwhere(data_array == 0)
-    print(start_locs)
     scores = np.zeros(len(start_locs))
+    vels = []
+    v = []
     for i, sl in enumerate(start_locs):
-        scores[i], vel = check_path(data_array, sl, scores[i])
+        # v = []
+        # t_vel = []
+        scores[i], t_vel = check_path(data_array, sl, scores[i], v)
+        vels.append(t_vel)
     print(scores)
+
 
 
 if __name__ == "__main__":
