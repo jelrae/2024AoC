@@ -25,7 +25,6 @@ def load_file(fp='input.txt'):
 
 def check_path(tm, lc, score=0, vel=[], uep=True):
     if tm[lc[0], lc[1]] == 0:
-        # print(vel)
         vel = []
 
     if tm[lc[0], lc[1]] == 9 and tuple(lc) not in vel and uep:
@@ -53,14 +52,11 @@ def main():
     fp = 'input.txt'
     unique_end_point = False
     data_array = np.array(load_file(fp))
-    print(data_array)
     start_locs = np.argwhere(data_array == 0)
     scores = np.zeros(len(start_locs))
     vels = []
     v = []
     for i, sl in enumerate(start_locs):
-        # v = []
-        # t_vel = []
         scores[i], t_vel = check_path(data_array, sl, scores[i], v, unique_end_point)
         vels.append(t_vel)
     # print(scores)
