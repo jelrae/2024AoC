@@ -35,12 +35,12 @@ def blink(stones):
     return new_stones
 
 def main():
-    stones = load_file("ti0.txt")
-
+    stones = load_file("input.txt")
     print(stones)
-
-    new_stones = blink(stones)
-    print(new_stones)
+    for i in range(0, 6):
+        stones = blink(stones)
+    # print(stones)
+    print(len(stones))
 
 
 if __name__ == "__main__":
