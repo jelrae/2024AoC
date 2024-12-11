@@ -1,6 +1,4 @@
 import numpy as np
-import re
-import math
 
 
 # Based on un-scorched scraps of the book, you determine that a good hiking trail is as long as possible and has an
