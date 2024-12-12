@@ -52,6 +52,7 @@ def main():
     final_num = quantum_pillars.rapid_blink(num_blinks)
     print("The final count is:")
     print(final_num)
+    print(len(quantum_pillars.stones.keys()))
 
 
 if __name__ == "__main__":
