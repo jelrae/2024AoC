@@ -34,8 +34,6 @@ def determine_similarity():
 
     si = set(u0) & set(u1)
 
-    breakpoint()
-
     d0 = {k: v for k, v in zip(u0, c0)}
     d1 = {k: v for k, v in zip(u1, c1)}
 
