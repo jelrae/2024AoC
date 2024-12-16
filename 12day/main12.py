@@ -18,6 +18,7 @@ class Region:
         self.perimeter = 0
         self.num_edges = 0
         self.num_corners = 0
+        self.edges = []
 
     def add_loc(self, loc):
         self.l.append(loc)
@@ -74,7 +75,6 @@ class GardenPlot:
                 for n in ns:
                     if n not in reg.l:
                         reg.perimeter += 1
-
                     else:
                         checked_locs.append(n)
                 i,j = plot
@@ -94,15 +94,24 @@ class GardenPlot:
                 # check for q0 corner
                 if up in reg.l and right in reg.l and d0 not in reg.l:
                     reg.num_edges += 2
+                    reg.edges.append(tuple([plot, up, right, d0]))
                 # check for q1 corner
-                if up in reg.l and left in reg.l and d1 not in reg.l:
+                elif up in reg.l and left in reg.l and d1 not in reg.l:
                     reg.num_edges += 2
+                    reg.edges.append(tuple([plot, up, left, d1]))
                 # check for q2 corner
-                if down in reg.l and left in reg.l and d2 not in reg.l:
+                elif down in reg.l and left in reg.l and d2 not in reg.l:
                     reg.num_edges += 2
+                    reg.edges.append(tuple([plot, down, left, d2]))
                 # check for q3 corner
-                if down in reg.l and right in reg.l and d3 not in reg.l:
+                elif down in reg.l and right in reg.l and d3 not in reg.l:
                     reg.num_edges += 2
+                    reg.edges.append(tuple([plot, down, right, d3]))
+
+            if reg.ct == 'A':
+                for edge in reg.edges:
+                    print("Corner found at location {0}, corner: {1}".format(edge[0], edge[1:]))
+                print(reg.num_edges)
 
 
     def gen_pos_neighbors(self, cur_loc, visited_locs):
@@ -161,11 +170,11 @@ class GardenPlot:
 
 def main():
     # fp = "input.txt"
-    fp = "ti0.txt"
+    fp = "ti4.txt"
     garden = GardenPlot(fp)
     garden.print_garden()
     garden.print_regions_map()
-    garden.print_regions_sizes(False)
+    garden.print_regions_sizes(True)
 
 
 if __name__ == "__main__":
