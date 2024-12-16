@@ -13,6 +13,7 @@ class Region:
         self.area = 0
         self.perimeter = 0
         self.num_edges = 0
+        self.num_corners = 0
 
     def add_loc(self, loc):
         self.l.append(loc)
@@ -115,8 +116,8 @@ class GardenPlot:
 
 
 def main():
-    # fp = "input.txt"
-    fp = "ti2.txt"
+    fp = "input.txt"
+    # fp = "ti2.txt"
     garden = GardenPlot(fp)
     garden.print_garden()
     garden.print_regions_map()
