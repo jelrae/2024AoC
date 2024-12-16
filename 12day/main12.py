@@ -44,8 +44,6 @@ class GardenPlot:
                     cid = 0
                     cur_plant = self.plot[i, j]
                     self.regions[cid] = Region(self.plot[i, j], cid, [i, j])
-                    area = 1
-                    perimeter = 2
                     n_edges = 0
                     self.regions_plot[i, j] = cid
                     self.regions[cid], checked_locs = self.check_neighbors([i, j], self.regions[cid], checked_locs)
@@ -53,25 +51,27 @@ class GardenPlot:
                     cid += 1
                     cur_plant = self.plot[i, j]
                     self.regions[cid] = Region(self.plot[i, j], cid, [i, j])
-                    area = 1
-                    perimeter = 0
                     n_edges = 0
                     self.regions_plot[i, j] = cid
                     self.regions[cid], checked_locs = self.check_neighbors([i, j], self.regions[cid], checked_locs)
         self.print_regions_map()
-        breakpoint()
-        for r in self.regions:
-            checked_locs = [[0, 0]]
-            r.area = len(r.l)
-            for plot in r.l:
+        for reg_id, reg in self.regions.items():
+            checked_locs = []
+            print(reg.l)
+            reg.area = len(reg.l)
+            for plot in reg.l:
                 if plot[0] == 0 or plot[0] == self.width-1:
-                    r.perimeter += 1
+                    reg.perimeter += 1
                 if plot[1] == 0 or plot[1] == self.height-1:
-                    r.perimeter += 1
-                self.gen_pos_neighbors()
-
-    def calc_perimeter(self, r_cur):
-
+                    reg.perimeter += 1
+                checked_locs.append([plot])
+                ns = self.gen_pos_neighbors(plot, checked_locs)
+                for n in ns:
+                    if n not in reg.l:
+                        reg.perimeter += 1
+                    else:
+                        checked_locs.append(n)
+        self.print_regions_sizes()
 
     def gen_pos_neighbors(self, cur_loc, visited_locs):
         i, j = cur_loc
@@ -82,19 +82,21 @@ class GardenPlot:
         pos_locs = np.concatenate((new_locs_x, new_locs_y)).tolist()
         new_locs = []
         for i in pos_locs:
-            if i not in visited_locs:
+            if i not in visited_locs and i != cur_loc:
                 new_locs.append(i)
         return new_locs
 
     def check_neighbors(self, cur_loc: list, cur_region: Region, checked_locs: list):
+        checked_locs.append(cur_loc)
         neighbours = self.gen_pos_neighbors(cur_loc, checked_locs)
         if neighbours:
             for neighbour in neighbours:
                 try:
-                    if self.plot[tuple(neighbour)] == cur_region.ct:
+                    if self.plot[tuple(neighbour)] == cur_region.ct and neighbour not in checked_locs:
                         self.regions_plot[tuple(neighbour)] = cur_region.cid
                         cur_region.add_loc(neighbour)
-                        checked_locs.append(neighbour)
+                        # print(cur_region.l)
+                        cur_region.area += 1
                         self.check_neighbors(neighbour, cur_region, checked_locs)
                 except:
                     breakpoint()
@@ -106,6 +108,13 @@ class GardenPlot:
     def print_garden(self):
         print(self.plot)
 
+    def print_regions_sizes(self):
+        cost = 0
+        for reg_id, reg in self.regions.items():
+            print("For Region {0} we have an area of {1} and a perimeter of {2}".format(reg_id, reg.area, reg.perimeter))
+            cost += np.sum(reg.area * reg.perimeter)
+        print("The cost found for this plot is: {0}".format(cost))
+
 
 def main():
     # fp = "input.txt"
@@ -113,7 +122,6 @@ def main():
     garden = GardenPlot(fp)
     garden.print_garden()
     garden.print_regions_map()
-    breakpoint()
 
 
 if __name__ == "__main__":
