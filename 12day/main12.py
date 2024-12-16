@@ -4,6 +4,10 @@ import math
 from collections import defaultdict
 
 
+# To make a propper network should have probably created something with up down left and right to be able to just
+# keep track of who is where and when
+
+
 class Region:
     def __init__(self, plant, crop_id, init_loc):
         self.ct = plant
@@ -59,6 +63,7 @@ class GardenPlot:
         for reg_id, reg in self.regions.items():
             checked_locs = []
             reg.area = len(reg.l)
+            reg.num_edges = 4
             for plot in reg.l:
                 if plot[0] == 0 or plot[0] == self.width-1:
                     reg.perimeter += 1
@@ -69,8 +74,36 @@ class GardenPlot:
                 for n in ns:
                     if n not in reg.l:
                         reg.perimeter += 1
+
                     else:
                         checked_locs.append(n)
+                i,j = plot
+                up = [i, max(j-1, 0)]
+                down = [i, min(j+1, self.height-1)]
+                left = [max(0, i-1), j]
+                right = [min(i+1, self.width-1), j]
+                d0 = [right[0], up[1]]
+                d1 = [left[0], up[1]]
+                d2 = [left[0], down[1]]
+                d3 = [right[0], down[1]]
+                q0 = [up, right, d0]
+                q1 = [up, left, d1]
+                q2 = [down, left, d2]
+                q3 = [down, right, d3]
+
+                # check for q0 corner
+                if up in reg.l and right in reg.l and d0 not in reg.l:
+                    reg.num_edges += 2
+                # check for q1 corner
+                if up in reg.l and left in reg.l and d1 not in reg.l:
+                    reg.num_edges += 2
+                # check for q2 corner
+                if down in reg.l and left in reg.l and d2 not in reg.l:
+                    reg.num_edges += 2
+                # check for q3 corner
+                if down in reg.l and right in reg.l and d3 not in reg.l:
+                    reg.num_edges += 2
+
 
     def gen_pos_neighbors(self, cur_loc, visited_locs):
         i, j = cur_loc
@@ -95,6 +128,7 @@ class GardenPlot:
                         self.regions_plot[tuple(neighbour)] = cur_region.cid
                         cur_region.add_loc(neighbour)
                         # print(cur_region.l)
+                        # This is pointless since we do this later with a sum (we are being inefficient atm but thats ok)
                         cur_region.area += 1
                         self.check_neighbors(neighbour, cur_region, checked_locs)
                 except:
@@ -107,21 +141,31 @@ class GardenPlot:
     def print_garden(self):
         print(self.plot)
 
-    def print_regions_sizes(self):
-        cost = 0
-        for reg_id, reg in self.regions.items():
-            print("For Region {0} we have an area of {1} and a perimeter of {2}".format(reg_id, reg.area, reg.perimeter))
-            cost += np.sum(reg.area * reg.perimeter)
-        print("The cost found for this plot is: {0}".format(cost))
+    def print_regions_sizes(self, check_regions = False):
+        cost_full = 0
+        cost_discount = 0
+        if check_regions:
+            for reg_id, reg in self.regions.items():
+                print("For Region {0} we have an area of {1}, a perimeter of {2}, and a number of edges of {3}".format(reg_id, reg.area, reg.perimeter, reg.num_edges))
+                cost_full += np.sum(reg.area * reg.perimeter)
+                cost_discount += np.sum(reg.area * reg.num_edges)
+        else:
+            costs_full = [np.sum(reg.area * reg.perimeter) for _, reg in self.regions.items()]
+            cost_full = np.sum(costs_full)
+
+            costs_discount = [np.sum(reg.area * reg.num_edges) for _, reg in self.regions.items()]
+            cost_discount = np.sum(costs_discount)
+        print("The full cost found for this plot is: {0}".format(cost_full))
+        print("The discounted cost found for this plot is: {0}".format(cost_discount))
 
 
 def main():
-    fp = "input.txt"
-    # fp = "ti2.txt"
+    # fp = "input.txt"
+    fp = "ti0.txt"
     garden = GardenPlot(fp)
     garden.print_garden()
     garden.print_regions_map()
-    garden.print_regions_sizes()
+    garden.print_regions_sizes(False)
 
 
 if __name__ == "__main__":
