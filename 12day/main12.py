@@ -54,10 +54,9 @@ class GardenPlot:
                     n_edges = 0
                     self.regions_plot[i, j] = cid
                     self.regions[cid], checked_locs = self.check_neighbors([i, j], self.regions[cid], checked_locs)
-        self.print_regions_map()
+        # self.print_regions_map()
         for reg_id, reg in self.regions.items():
             checked_locs = []
-            print(reg.l)
             reg.area = len(reg.l)
             for plot in reg.l:
                 if plot[0] == 0 or plot[0] == self.width-1:
@@ -71,7 +70,6 @@ class GardenPlot:
                         reg.perimeter += 1
                     else:
                         checked_locs.append(n)
-        self.print_regions_sizes()
 
     def gen_pos_neighbors(self, cur_loc, visited_locs):
         i, j = cur_loc
@@ -122,32 +120,9 @@ def main():
     garden = GardenPlot(fp)
     garden.print_garden()
     garden.print_regions_map()
+    garden.print_regions_sizes()
 
 
 if __name__ == "__main__":
     main()
 
-# ccl = np.argwhere(self.plot == crop)  # Checked crops locations
-# scl = ccl[:].tolist()  # Search crops locations
-# while scl:
-#     sl = scl.pop(0)
-#     subcroplocs = [sl]
-#     area = 1
-#     perimeter = 0
-#     if sl[0] == 0 or sl[0] == self.width - 1:
-#         perimeter += 1
-#     if sl[1] == 0 or sl[0] == self.height - 1:
-#         perimeter += 1
-#
-#     for crop_loc in scl:
-#         if crop_loc
-#
-#         breakpoint()
-
-# for crop in self.crop_types:
-#     cls = np.transpose(np.nonzero(self.plot == crop))
-#     check_crop = np.where(self.plot == crop, crop, -1)
-#     for i in range(check_crop.shape[0]):
-#         for j in range(check_crop.shape[1]):
-#             if check_crop[i, j] == crop:
-#                 check_crop[i, j] = cid
