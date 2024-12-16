@@ -64,7 +64,7 @@ class GardenPlot:
         for reg_id, reg in self.regions.items():
             checked_locs = []
             reg.area = len(reg.l)
-            reg.num_edges = 4
+            reg.num_corners = 0
             for plot in reg.l:
                 if plot[0] == 0 or plot[0] == self.width-1:
                     reg.perimeter += 1
@@ -78,10 +78,10 @@ class GardenPlot:
                     else:
                         checked_locs.append(n)
                 i,j = plot
-                up = [i, max(j-1, 0)]
-                down = [i, min(j+1, self.height-1)]
-                left = [max(0, i-1), j]
-                right = [min(i+1, self.width-1), j]
+                up = [i, j-1]
+                down = [i, j+1]
+                left = [i-1, j]
+                right = [i+1, j]
                 d0 = [right[0], up[1]]
                 d1 = [left[0], up[1]]
                 d2 = [left[0], down[1]]
@@ -93,22 +93,39 @@ class GardenPlot:
 
                 # check for q0 corner
                 if up in reg.l and right in reg.l and d0 not in reg.l:
-                    reg.num_edges += 2
+                    reg.num_corners += 1
                     reg.edges.append(tuple([plot, up, right, d0]))
                 # check for q1 corner
-                elif up in reg.l and left in reg.l and d1 not in reg.l:
-                    reg.num_edges += 2
+                if up in reg.l and left in reg.l and d1 not in reg.l:
+                    reg.num_corners += 1
                     reg.edges.append(tuple([plot, up, left, d1]))
                 # check for q2 corner
-                elif down in reg.l and left in reg.l and d2 not in reg.l:
-                    reg.num_edges += 2
+                if down in reg.l and left in reg.l and d2 not in reg.l:
+                    reg.num_corners += 1
                     reg.edges.append(tuple([plot, down, left, d2]))
                 # check for q3 corner
-                elif down in reg.l and right in reg.l and d3 not in reg.l:
-                    reg.num_edges += 2
+                if down in reg.l and right in reg.l and d3 not in reg.l:
+                    reg.num_corners += 1
+                    reg.edges.append(tuple([plot, down, right, d3]))
+                # Check for basic corner 0
+                if not(up in reg.l or right in reg.l):
+                    reg.num_corners += 1
+                    reg.edges.append(tuple([plot, up, right, d0]))
+                # Check for basic corner 1
+                if not (up in reg.l or left in reg.l):
+                    reg.num_corners += 1
+                    reg.edges.append(tuple([plot, up, left, d1]))
+                # Check for basic corner 2
+                if not (down in reg.l or left in reg.l):
+                    reg.num_corners += 1
+                    reg.edges.append(tuple([plot, down, left, d2]))
+                # Check for basic corner 3
+                if not (down in reg.l or right in reg.l):
+                    reg.num_corners += 1
                     reg.edges.append(tuple([plot, down, right, d3]))
 
-            if reg.ct == 'A':
+
+            if reg.ct == 'B':
                 for edge in reg.edges:
                     print("Corner found at location {0}, corner: {1}".format(edge[0], edge[1:]))
                 print(reg.num_edges)
@@ -155,14 +172,14 @@ class GardenPlot:
         cost_discount = 0
         if check_regions:
             for reg_id, reg in self.regions.items():
-                print("For Region {0} we have an area of {1}, a perimeter of {2}, and a number of edges of {3}".format(reg_id, reg.area, reg.perimeter, reg.num_edges))
+                print("For Region {0} we have an area of {1}, a perimeter of {2}, and a number of corners of {3}".format(reg_id, reg.area, reg.perimeter, reg.num_corners))
                 cost_full += np.sum(reg.area * reg.perimeter)
-                cost_discount += np.sum(reg.area * reg.num_edges)
+                cost_discount += np.sum(reg.area * reg.num_corners)
         else:
             costs_full = [np.sum(reg.area * reg.perimeter) for _, reg in self.regions.items()]
             cost_full = np.sum(costs_full)
 
-            costs_discount = [np.sum(reg.area * reg.num_edges) for _, reg in self.regions.items()]
+            costs_discount = [np.sum(reg.area * reg.num_corners) for _, reg in self.regions.items()]
             cost_discount = np.sum(costs_discount)
         print("The full cost found for this plot is: {0}".format(cost_full))
         print("The discounted cost found for this plot is: {0}".format(cost_discount))
