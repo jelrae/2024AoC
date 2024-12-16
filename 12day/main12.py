@@ -116,7 +116,7 @@ class GardenPlot:
 
 def main():
     # fp = "input.txt"
-    fp = "ti1.txt"
+    fp = "ti2.txt"
     garden = GardenPlot(fp)
     garden.print_garden()
     garden.print_regions_map()
