@@ -186,12 +186,12 @@ class GardenPlot:
 
 
 def main():
-    # fp = "input.txt"
-    fp = "ti4.txt"
+    fp = "input.txt"
+    # fp = "ti4.txt"
     garden = GardenPlot(fp)
     garden.print_garden()
     garden.print_regions_map()
-    garden.print_regions_sizes(True)
+    garden.print_regions_sizes(False)
 
 
 if __name__ == "__main__":
