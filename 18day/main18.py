@@ -82,7 +82,7 @@ class GridSpace:
             self.find_shortest_path()
             if self.distance[tuple(self.end)] == np.inf:
                 can_escape = False
-        print("The panel which causes us to be unable to escape is {}".format(self.dropped_bits[self.cur_time-1]))
+        print("The panel which causes us to be unable to escape is {}".format(reversed(self.dropped_bits[self.cur_time-1])))
 class Tile:
     def __init__(self, id, pos, max_grid):
         self.id = id
